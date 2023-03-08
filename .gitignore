@@ -1,0 +1,14 @@
+# Ignore images
+*.jpg
+*.png
+
+# Ignore Model Files
+*.pt
+*.pth
+*.onnx
+*.pb
+*.plan
+*.engine
+
+# Ignore Cache Files
+*.pyc
