@@ -34,7 +34,7 @@ pip install ultralytics==8.0.51 tritonclient[all]==2.31.0
 
 2. Export a model to ONNX format:
 ```
-yolo export model=yolov8n.pt format=onnx
+yolo export model=yolov8n.pt format=onnx dynamic=True opset=16
 ```
 
 3. Rename the model file to `model.onnx` and place it under the `/models/yolov8_onnx/1` directory (see directory structure above).
