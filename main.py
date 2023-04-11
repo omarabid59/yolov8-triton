@@ -31,15 +31,18 @@ def draw_bounding_box(img, class_id, confidence, x, y, x_plus_w, y_plus_h):
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
 
-def read_image(image_path: str) -> np.ndarray:
+def read_image(image_path: str, expected_image_shape) -> np.ndarray:
+    expected_width = expected_image_shape[0]
+    expected_height = expected_image_shape[1]
+    expected_length = min((expected_height, expected_width))
     original_image: np.ndarray = cv2.imread(image_path)
     [height, width, _] = original_image.shape
     length = max((height, width))
     image = np.zeros((length, length, 3), np.uint8)
     image[0:height, 0:width] = original_image
-    scale = length / 640
+    scale = length / expected_length
 
-    input_image = cv2.resize(image, (640, 640))
+    input_image = cv2.resize(image, (expected_width, expected_height))
     input_image = (input_image / 255.0).astype(np.float32)
 
     # Channel first
@@ -77,7 +80,8 @@ def run_inference(model_name: str, input_image: np.ndarray,
 
 def main(image_path, model_name, url):
     triton_client = get_triton_client(url)
-    original_image, input_image, scale = read_image(image_path)
+    expected_image_shape = triton_client.get_model_metadata(model_name).inputs[0].shape[-2:]
+    original_image, input_image, scale = read_image(image_path, expected_image_shape)
     num_detections, detection_boxes, detection_scores, detection_classes = run_inference(
         model_name, input_image, triton_client)
 
