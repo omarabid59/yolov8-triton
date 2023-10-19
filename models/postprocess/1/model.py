@@ -132,7 +132,7 @@ class TritonPythonModel:
                     'confidence': scores[index],
                     'box': box}
                 output_boxes.append(box)
-                output_scores.append(class_ids[index])
+                output_scores.append(scores[index])
                 output_classids.append(class_ids[index])
 
                 num_detections += 1
